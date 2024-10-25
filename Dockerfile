@@ -1,8 +1,10 @@
 # Use a lightweight Node.js base image for ARMv6
-FROM arm64v8/node:18-alpine AS arm
+FROM arm64v8/node:18-slim AS arm
 
 # Install required packages
-RUN apk add --no-cache bind-tools curl iputils traceroute
+RUN apt-get update && \
+    apt-get install -y dnsutils inetutils-traceroute && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,11 +19,12 @@ RUN npm install --production
 COPY . .
 
 # Use a lightweight Node.js base image for x86_64
-FROM node:18-alpine AS x86
+FROM node:18-slim AS x86
 
 # Install required packages
-RUN apk add --no-cache bind-tools curl iputils traceroute
-
+RUN apt-get update && \
+    apt-get install -y dnsutils inetutils-traceroute && \
+    rm -rf /var/lib/apt/lists/*
 # Set the working directory in the container
 WORKDIR /app
 
