@@ -1,6 +1,9 @@
 # Use a lightweight Node.js base image for ARMv6
 FROM arm64v8/node:18-alpine AS arm
 
+# Install required packages
+RUN apk add --no-cache bind-tools curl iputils traceroute
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -15,6 +18,9 @@ COPY . .
 
 # Use a lightweight Node.js base image for x86_64
 FROM node:18-alpine AS x86
+
+# Install required packages
+RUN apk add --no-cache bind-tools curl iputils traceroute
 
 # Set the working directory in the container
 WORKDIR /app
