@@ -1,0 +1,37 @@
+# ddns-client-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddns-client-deployment
+  labels:
+    app: ddns-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ddns-client
+  template:
+    metadata:
+      labels:
+        app: ddns-client
+    spec:
+      containers:
+      - name: ddns-client
+        image: docker.io/grimos10/ddns-client-node:arm 
+        env:
+        - name: DOMAIN
+          value: "example.com"  # Your domain name
+        - name: SUBDOMAIN
+          value: "sub"  # Your subdomain name
+        - name: PORKBUN_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ddns-secret
+              key: PORKBUN_API_KEY
+        - name: PORKBUN_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ddns-secret
+              key: PORKBUN_SECRET_KEY
+        - name: INTERVAL
+          value: "60000"  # Check every 60 seconds (you can adjust this)
